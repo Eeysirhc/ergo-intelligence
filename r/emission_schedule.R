@@ -1,7 +1,7 @@
 ##############################
 # Author: eeysirhc
 # Date written: 2021-12-22
-# Objective:visualize the Ergo emission schedule
+# Objective: visualize the Ergo emission schedule
 # Reference: https://ergoplatform.org/docs/whitepaper.pdf
 ##############################
 
