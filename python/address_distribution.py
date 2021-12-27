@@ -1,7 +1,7 @@
 """
 Author: eeysirhc
 Date written: 2021-12-20
-Objective: visualize Ergo wallet distribution to find the average mean of the ecosystem
+Objective: visualize Ergo wallet distribution to find the average mean of all holders
 """
 
 # LOAD MODULES
