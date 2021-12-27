@@ -30,13 +30,13 @@ df['tally'] = df.groupby(['address'])['balance'].cumsum()
 ## needs work: use % distribution instead of raw values
 df['segment'] = 'whale'
 df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'plankton'
-df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'shrimp'
-df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'crab'
-df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'lobster'
-df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'octopus'
-df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'fish'
-df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'dolphin'
-df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'shark'
+df.loc[df['tally'].between(10, 100, inclusive=True), 'segment'] = 'shrimp'
+df.loc[df['tally'].between(100, 1e3, inclusive=True), 'segment'] = 'crab'
+df.loc[df['tally'].between(1e3, 5e3, inclusive=True), 'segment'] = 'lobster'
+df.loc[df['tally'].between(5e3, 1e4, inclusive=True), 'segment'] = 'octopus'
+df.loc[df['tally'].between(1e4, 1e5, inclusive=True), 'segment'] = 'fish'
+df.loc[df['tally'].between(1e5, 5e5, inclusive=True), 'segment'] = 'dolphin'
+df.loc[df['tally'].between(5e5, 1e6, inclusive=True), 'segment'] = 'shark'
 
 
 # FIND AVERAGE MEAN OF ALL ERGO ADDRESSES
