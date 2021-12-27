@@ -24,11 +24,11 @@ def coingecko_fetch(id_coin):
   p = pd.DataFrame(df_raw['prices'])
   mc = pd.DataFrame(df_raw['market_caps'])
   df = pd.merge(p, mc, how='left', on=0)
-  
+
   # RENAME COLUMNS
   labels = ['timestamp', 'price', 'market_cap']
   df.columns = labels
-  
+
   # CLEANUP AND JOIN WITH META DATA
   df['timestamp'] = pd.to_datetime(df['timestamp'], unit="ms")
   df['id'] = id_coin
@@ -36,9 +36,7 @@ def coingecko_fetch(id_coin):
   df = df[['timestamp', 'id', 'symbol', 'price', 'market_cap']]
 
   return(df)
-  
-  
+
+
 # EXAMPLE
-# ergo = coingecko_fetch("ergo")
-
-
+# coingecko_fetch("ergo")

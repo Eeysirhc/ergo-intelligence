@@ -8,7 +8,7 @@ Objective: visualize Ergo wallet distribution to find the average mean of all ho
 import vaex
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.ticer as ticker
+import matplotlib.ticker as ticker
 import seaborn as sns
 
 
