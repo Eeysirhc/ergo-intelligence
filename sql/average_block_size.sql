@@ -1,13 +1,13 @@
 /***************************
 Author: eeysirhc
-Date written: 2021-12-01
-Objective: pull the number of total coins in circulation on given date
+Date written: 2021-12-27
+Objective: compute the average block size over time
 Source: https://github.com/ergoplatform/explorer-backend/blob/master/modules/explorer-core/src/main/scala/org/ergoplatform/explorer/db/queries/BlockInfoQuerySet.scala
 ***************************/
 
 select
   min(timestamp) as t,
-  cast(max(total_coins_issued)/10^9 as bigint)as total_coins_issued,
+  cast(avg(block_size) as bigint) as block_size,
   to_char(to_timestamp(timestamp / 1000), 'YYYY-MM-DD') as date
 from blocks_info
 
