@@ -11,7 +11,8 @@ with outputs as (
     from node_outputs nos
     where nos.main_chain
     group by 1,2
-), inputs as (
+),
+inputs as (
         select txs.timestamp,
         nos.address,
         sum(nos.value) as value
@@ -20,7 +21,8 @@ with outputs as (
     join node_transactions txs on txs.id = nis.tx_id
     where nos.main_chain and nis.main_chain
     group by 1,2
-), balance as (
+),
+balance as (
         select coalesce(nos.timestamp, nis.timestamp) as timestamp,
         coalesce(nos.address, nis.address) as address,
         coalesce(nos.value, 0) - coalesce(nis.value, 0) as diff
@@ -28,6 +30,7 @@ with outputs as (
     full outer join inputs nis on nis.timestamp = nos.timestamp and nos.address = nis.address
     order by 1
 )
+
 select address,
     to_char(to_timestamp(timestamp / 1000), 'YYYY-MM-DD') as date,
     diff / 10^9 as diff
