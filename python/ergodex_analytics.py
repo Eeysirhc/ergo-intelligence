@@ -2,6 +2,12 @@
 Author: eeysirhc
 Date written: 2022-01-03
 Objective: performance analytics visualization of Ergodex liquidity pool investments
+
+Example CSV header requirements:
+date, lp_pair1, lp_pair2
+2021-11-17, 0.97906, 8.41
+2021-11-27, 1.07014, 7.54
+2021-11-28, 1.03666, 7.80
 """
 
 ##### LOAD MODULES #####
