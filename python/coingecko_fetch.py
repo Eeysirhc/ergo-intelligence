@@ -4,14 +4,14 @@
 # Objective: fetch daily price data from CoinGecko API
 ##############################
 
-# LOAD MODULES
+##### LOAD MODULES #####
 import pandas as pd
 
 from pycoingecko import CoinGeckoAPI
 cg = CoinGeckoAPI()
 
 
-# CREATE FUNCTION
+##### CREATE FUNCTION #####
 def coingecko_fetch(id_coin):
 
   # GRAB META DATA
@@ -38,5 +38,5 @@ def coingecko_fetch(id_coin):
   return(df)
 
 
-# EXAMPLE
+##### EXAMPLE #####
 # coingecko_fetch("ergo")

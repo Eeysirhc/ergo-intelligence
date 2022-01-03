@@ -4,7 +4,7 @@ Date written: 2021-12-20
 Objective: visualize Ergo wallet distribution to find the average mean of all holders
 """
 
-# LOAD MODULES
+##### LOAD MODULES #####
 import vaex
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -12,7 +12,7 @@ import matplotlib.ticker as ticker
 import seaborn as sns
 
 
-# IMPORT AND SANITIZE DATA
+##### IMPORT AND SANITIZE DATA #####
 ## use address_balance.sql script and save CSV
 ## needs work: read from postgres database directly instead of referencing CSV file
 df_raw = vaex.from_csv("/path/to/file/address_balance.csv", parse_dates=['date'], copy_index=False)
@@ -26,7 +26,7 @@ df = df.to_pandas_df(['address', 'date', 'balance'])
 df['tally'] = df.groupby(['address'])['balance'].cumsum()
 
 
-# CLASSIFY WALLET SEGMENTATION
+##### CLASSIFY WALLET SEGMENTATION #####
 ## needs work: use % distribution instead of raw values
 df['segment'] = 'whale'
 df.loc[df['tally'].between(1, 10, inclusive=True), 'segment'] = 'plankton'
@@ -39,18 +39,18 @@ df.loc[df['tally'].between(1e5, 5e5, inclusive=True), 'segment'] = 'dolphin'
 df.loc[df['tally'].between(5e5, 1e6, inclusive=True), 'segment'] = 'shark'
 
 
-# FIND AVERAGE MEAN OF ALL ERGO ADDRESSES
+##### FIND AVERAGE MEAN OF ALL ERGO ADDRESSES #####
 avg = df[df['date'] == '2021-12-20']
 avg = avg[avg['tally'] > 0]
 avg = avg.tally.mean()
 
 
-# FINALIZE DATA FRAMES
+##### FINALIZE DATA FRAMES #####
 df_final = df.drop_duplicates(['address'], keep='last')
 df_final = df_final[df_final['tally'] >= 1]
 
 
-# PLOT DATA
+##### PLOT DATA #####
 plt.clf()
 plt.figure(figsize=(20,15))
 
