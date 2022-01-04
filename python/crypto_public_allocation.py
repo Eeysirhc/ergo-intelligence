@@ -39,9 +39,7 @@ df = [
 ]
 
 df = pd.DataFrame(df)
-
 df.columns = labels
-
 df = df.sort_values('public_allocation', ascending=False)
 
 
