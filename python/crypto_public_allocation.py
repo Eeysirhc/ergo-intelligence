@@ -36,7 +36,6 @@ df = [
     ['Ergo', 95.57],
     ['Ravencoin', 100],
     ['Bitcoin', 100]
-
 ]
 
 df = pd.DataFrame(df)
@@ -44,6 +43,7 @@ df = pd.DataFrame(df)
 df.columns = labels
 
 df = df.sort_values('public_allocation', ascending=False)
+
 
 
 ##### GRAPH DATA #####
