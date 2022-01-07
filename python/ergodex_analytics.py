@@ -1,6 +1,7 @@
 """
 Author: eeysirhc
 Date written: 2022-01-03
+Last updated: 2022-01-06
 Objective: performance analytics visualization of Ergodex liquidity pool investments
 
 Example CSV header requirements:
@@ -72,34 +73,29 @@ df_final['erg_diff'] = 100 * (df_final.price / ilp_price - 1)
 df_final['lp_vs_hodl'] = 100 * (df_final.lp_investment / df_final.hodl_instead - 1)
 
 
-##### GRAPH: SCATTERPLOT OF PRICE DELTA VS LP/HODL #####
+##### GRAPHING REGION #####
 df_clean = df_final.iloc[1:]
 
-plt.clf()
-plt.figure(figsize=(20,15))
+plt.rcParams["figure.dpi"] = 1000
 
-sns.scatterplot(data=df_clean, x="erg_diff", y="lp_vs_hodl", s=100)
+fig = plt.figure(figsize=(20,15))
 
-plt.axhline(0, color='grey', linestyle=':')
-plt.axvline(0, color='grey', linestyle=':')
-plt.xlim(-50, 50)
-plt.ylim(-50, 50)
-plt.xlabel("ERG price change (%)")
-plt.ylabel("LP vs HODL (%)")
+### SCATTERPLOT OF PRICE DELTA VS LP/HOLD ###
+ax1 = fig.add_subplot(2, 1, 1)
+ax1 = sns.scatterplot(data=df_clean, x="erg_diff", y="lp_vs_hodl", s=100)
+ax1.axhline(0, color='grey', linestyle=':')
+ax1.axvline(0, color='grey', linestyle=':')
+ax1.set_xlabel("ERG Price change (%)")
+ax1.set_ylabel("LP vs HODL (%)")
+ax1.set_xlim(-60, 60)
+ax1.set_ylim(-60, 60)
 
-plt.show()
-
-
-
-##### GRAPH: TIME SERIES OF LP VS HODL #####
-plt.clf()
-plt.figure(figsize=(20,15))
-
-sns.lineplot(data=df_final, x="date", y="lp_investment", marker="o", color='steelblue', label="LP Investment")
-sns.lineplot(data=df_final, x="date", y="hodl_instead", marker="o", color='red', label="HODL Instead")
-
-plt.ylim(0, 20)
-plt.xlabel("")
-plt.ylabel("USD Value")
+### TIME SERIES OF LP VS HODL ###
+ax2 = fig.add_subplot(2, 1, 2)
+ax2 = sns.lineplot(data=df_final, x="date", y="lp_investment", marker="o", color='steelblue', label="LP Investment")
+ax2 = sns.lineplot(data=df_final, x="date", y="hodl_instead", marker="o", color='red', label="HODL Instead")
+ax2.set_xlabel("")
+ax2.set_ylabel("USD Value")
+ax2.set_ylim(0, 20)
 
 plt.show()
