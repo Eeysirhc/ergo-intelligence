@@ -1,7 +1,7 @@
 """
 Author: eeysirhc
 Date written: 2022-01-03
-Last updated: 2022-01-06
+Last updated: 2022-01-07
 Objective: performance analytics visualization of Ergodex liquidity pool investments
 
 Example CSV header requirements:
@@ -20,9 +20,9 @@ from pycoingecko import CoinGeckoAPI
 cg = CoinGeckoAPI()
 
 ##### LOAD ERGODEX DAILY LIQUIDITY POOL DATA #####
-ergodex_data = "/path/to/file/ergodex-data.csv"
-df = pd.read_csv(ergodex_data)
-df['date'] = pd.to_datetime(df['date'])
+ergodex_data_raw = "/path/to/file/ergodex-data.csv"
+ergodex_data = pd.read_csv(ergodex_data_raw)
+dergodex_data['date'] = pd.to_datetime(ergodex_data['date'])
 
 ##### FUNCTION FOR DAILY PRICE DATA #####
 def coingecko_fetch(id_coin):
@@ -47,34 +47,44 @@ def coingecko_fetch(id_coin):
   df = df[['timestamp', 'price']]
 
   return(df)
+##############################
 
 ##### GRAB ERGO DATA FROM COINGECKO #####
 ergo = coingecko_fetch("ergo")
 ergo.rename(columns = {'timestamp': 'date'}, inplace = True)
 
 
-##### JOIN DATA FRAMES #####
-df_final = df.merge(ergo, how='left', on='date')
+##### FUNCTION TO COMPUTE AND JOIN DATAFRAMES #####
+def ergodex_analytics(df):
+
+    df_final = df.merge(ergo, how='left', on='date')
+
+    # SET STATIC VARIABLES FOR INITIAL INVESTMENT
+    ilp1 = df_final.lp_pair1[0]
+    ilp2 = df_final.lp_pair2[0]
+    ilp_ratio = ilp1 / ilp2
+    ilp_price = df_final.price[0]
+
+    # CALCULATE PERFORMANCE ANALYTICS
+    df_final['ratio'] = df_final.lp_pair1 / df_final.lp_pair2
+    df_final['lp_value1'] = df_final.lp_pair1 * df_final.price
+    df_final['lp_value2'] = df_final.lp_pair2 * df_final.price * df_final.ratio
+    df_final['lp_investment'] = df_final.lp_value1 + df_final.lp_value2
+    df_final['hodl_instead'] = (ilp1 * df_final.price) + (ilp2 * df_final.price * ilp_ratio)
+    df_final['erg_diff'] = 100 * (df_final.price / ilp_price - 1)
+    df_final['lp_vs_hodl'] = 100 * (df_final.lp_investment / df_final.hodl_instead - 1)
+
+    return(df_final)
+##############################
 
 
-##### SET STATIC VARIABLES FOR INITIAL INVESTMENT #####
-ilp1 = df_final.lp_pair1[0]
-ilp2 = df_final.lp_pair2[0]
-ilp_ratio = ilp1 / ilp2
-ilp_price = df_final.price[0]
+##### FINALIZE DATA FRAME #####
+ergodex = ergodex_analytics(ergodex_data)
+ergodex = ergodex.iloc[1:]
 
-##### CALCULATE PERFORMANCE ANALYTICS #####
-df_final['ratio'] = df_final.lp_pair1 / df_final.lp_pair2
-df_final['lp_value1'] = df_final.lp_pair1 * df_final.price
-df_final['lp_value2'] = df_final.lp_pair2 * df_final.price * df_final.ratio
-df_final['lp_investment'] = df_final.lp_value1 + df_final.lp_value2
-df_final['hodl_instead'] = (ilp1 * df_final.price) + (ilp2 * df_final.price * ilp_ratio)
-df_final['erg_diff'] = 100 * (df_final.price / ilp_price - 1)
-df_final['lp_vs_hodl'] = 100 * (df_final.lp_investment / df_final.hodl_instead - 1)
 
 
 ##### GRAPHING REGION #####
-df_clean = df_final.iloc[1:]
 
 plt.rcParams["figure.dpi"] = 1000
 
@@ -82,7 +92,7 @@ fig = plt.figure(figsize=(20,15))
 
 ### SCATTERPLOT OF PRICE DELTA VS LP/HOLD ###
 ax1 = fig.add_subplot(2, 1, 1)
-ax1 = sns.scatterplot(data=df_clean, x="erg_diff", y="lp_vs_hodl", s=100)
+ax1 = sns.scatterplot(data=ergodex, x="erg_diff", y="lp_vs_hodl", s=100)
 ax1.axhline(0, color='grey', linestyle=':')
 ax1.axvline(0, color='grey', linestyle=':')
 ax1.set_xlabel("ERG Price change (%)")
@@ -92,8 +102,8 @@ ax1.set_ylim(-60, 60)
 
 ### TIME SERIES OF LP VS HODL ###
 ax2 = fig.add_subplot(2, 1, 2)
-ax2 = sns.lineplot(data=df_final, x="date", y="lp_investment", marker="o", color='steelblue', label="LP Investment")
-ax2 = sns.lineplot(data=df_final, x="date", y="hodl_instead", marker="o", color='red', label="HODL Instead")
+ax2 = sns.lineplot(data=ergodex, x="date", y="lp_investment", marker="o", color='steelblue', label="LP Investment")
+ax2 = sns.lineplot(data=ergodex, x="date", y="hodl_instead", marker="o", color='red', label="HODL Instead")
 ax2.set_xlabel("")
 ax2.set_ylabel("USD Value")
 ax2.set_ylim(0, 20)
