@@ -27,26 +27,26 @@ ergodex_data['date'] = pd.to_datetime(ergodex_data['date'])
 ##### FUNCTION FOR DAILY PRICE DATA #####
 def coingecko_fetch(id_coin):
 
-  # GRAB META DATA
-  md = cg.get_coins_markets(ids=id_coin, vs_currency='usd')
-  md = pd.DataFrame(md, columns=["id", "symbol"])
-  md['symbol'] = md['symbol'].str.upper()
+    # GRAB META DATA
+    md = cg.get_coins_markets(ids=id_coin, vs_currency='usd')
+    md = pd.DataFrame(md, columns=["id", "symbol"])
+    md['symbol'] = md['symbol'].str.upper()
 
-  # CREATE DATAFRAME
-  df_raw = cg.get_coin_market_chart_by_id(id=id_coin, vs_currency='usd', days='3650')
-  df = pd.DataFrame(df_raw['prices'])
+    # CREATE DATAFRAME
+    df_raw = cg.get_coin_market_chart_by_id(id=id_coin, vs_currency='usd', days='3650')
+    df = pd.DataFrame(df_raw['prices'])
 
-  # RENAME COLUMNS
-  labels = ['timestamp', 'price']
-  df.columns = labels
+    # RENAME COLUMNS
+    labels = ['timestamp', 'price']
+    df.columns = labels
 
-  # CLEANUP AND JOIN WITH META DATA
-  df['timestamp'] = pd.to_datetime(df['timestamp'], unit="ms")
-  df['id'] = id_coin
-  df = df.merge(md, how='left', on='id')
-  df = df[['timestamp', 'price']]
+    # CLEANUP AND JOIN WITH META DATA
+    df['timestamp'] = pd.to_datetime(df['timestamp'], unit="ms")
+    df['id'] = id_coin
+    df = df.merge(md, how='left', on='id')
+    df = df[['timestamp', 'price']]
 
-  return(df)
+    return(df)
 ##############################
 
 ##### GRAB ERGO DATA FROM COINGECKO #####
@@ -57,6 +57,7 @@ ergo.rename(columns = {'timestamp': 'date'}, inplace = True)
 ##### FUNCTION TO COMPUTE AND JOIN DATAFRAMES #####
 def ergodex_analytics(df):
 
+    # JOIN LP QUANTITY WITH PRICING DATA
     df_final = df.merge(ergo, how='left', on='date')
 
     # SET STATIC VARIABLES FOR INITIAL INVESTMENT
