@@ -22,7 +22,7 @@ cg = CoinGeckoAPI()
 ##### LOAD ERGODEX DAILY LIQUIDITY POOL DATA #####
 ergodex_data_raw = "/path/to/file/ergodex-data.csv"
 ergodex_data = pd.read_csv(ergodex_data_raw)
-dergodex_data['date'] = pd.to_datetime(ergodex_data['date'])
+ergodex_data['date'] = pd.to_datetime(ergodex_data['date'])
 
 ##### FUNCTION FOR DAILY PRICE DATA #####
 def coingecko_fetch(id_coin):
