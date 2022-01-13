@@ -1,6 +1,7 @@
 ##############################
 # Author: eeysirhc
 # Date written: 2022-01-10
+# Last updated: 2022-01-12
 # Objective: visualize ErgoPad investment relationship and vesting schedule tiers
 # Reference: https://github.com/ergo-pad/ergopad/blob/main/docs/README.md#tokenomics-and-vesting-schedule
 ##############################
@@ -19,11 +20,13 @@ tokens <- seq(1, 1000, 1) %>%
 tokens_final <- tokens %>% 
   mutate(seed = dollar / 0.011,
          strategic = dollar / 0.02,
-         presale = dollar / 0.03) %>%
-  pivot_longer(2:4) %>% 
+         presale = dollar / 0.03,
+         ido = dollar / 0.04) %>%
+  pivot_longer(2:5) %>% 
   mutate(name = case_when(name == 'seed' ~ 'Seed @ $0.011',
                           name == 'strategic' ~ 'Strategic @ $0.02',
-                          name == 'presale' ~ 'Presale @ $0.03')) %>% 
+                          name == 'presale' ~ 'Presale @ $0.03',
+                          name == 'ido' ~ 'IDO @ $0.04')) %>% 
   mutate(name = factor(name))
 
 # VARIABLE FOR TOKEN AMOUNT BASED ON 1K SIGUSD INVESTMENT
@@ -31,6 +34,7 @@ amt <- tokens_final %>% filter(dollar == 1000)
 amt_seed <- amt[1,3]
 amt_strategic <- amt[2,3]
 amt_presale <- amt[3,3]
+amt_ido <- amt[4,3]
 
 # FUNCTION FOR VESTING SCHEDULE
 vest_schedule <- function(amount, months, segment){
@@ -50,19 +54,21 @@ vest_schedule <- function(amount, months, segment){
 vest_seed <- vest_schedule(amt_seed, 9, 'seed') 
 vest_strategic <- vest_schedule(amt_strategic, 6, 'strategic')
 vest_presale <- vest_schedule(amt_presale, 3, 'presale')
+vest_ido <- vest_schedule(amt_ido, 1, 'ido')
 
 # JOIN DATA FRAMES
-vest <- rbind(vest_seed, vest_strategic, vest_presale)
+vest <- rbind(vest_seed, vest_strategic, vest_presale, vest_ido)
 
 # STANDARDIZE DIMENSION VALUES
 vest_final <- vest %>% 
   mutate(segment = case_when(segment == 'seed' ~ 'Seed @ $0.011',
                              segment == 'strategic' ~ 'Strategic @ $0.02',
-                             segment == 'presale' ~ 'Presale @ $0.03')) %>% 
+                             segment == 'presale' ~ 'Presale @ $0.03',
+                             segment == 'ido' ~ 'IDO @ $0.04')) %>% 
   mutate(segment = factor(segment))
 
 # REARRANGE LEVELS
-ltemp <- c("Seed @ $0.011", "Strategic @ $0.02", "Presale @ $0.03")
+ltemp <- c("Seed @ $0.011", "Strategic @ $0.02", "Presale @ $0.03", "IDO @ $0.04")
 tokens_final$name <- fct_relevel(tokens_final$name, ltemp)
 vest_final$segment <- fct_relevel(vest_final$segment, ltemp)
 
@@ -83,8 +89,9 @@ p1 <- tokens_final %>%
 
 # GRAPH: VESTING TIMELINE TO TOKEN AMOUNT
 p2 <- vest_final %>% 
-  ggplot() +
-  geom_line(aes(value, cvest$value, color = segment, group = segment), size = 1) +
+  ggplot(aes(value, cvest$value, color = segment, group = segment)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
   labs(x = "Months Vested", y = NULL, color = NULL,
        subtitle = "Vesting schedule based on 1,000 sigUSD purchase amount") +
   scale_y_continuous(labels = comma_format()) +
@@ -95,5 +102,3 @@ p2 <- vest_final %>%
 
 # FINAL GRAPH
 p1 + p2
-
-
