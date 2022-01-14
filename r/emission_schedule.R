@@ -73,7 +73,7 @@ ggplot() +
                      limits = c(0, 100e6)) +
   scale_x_continuous(labels = comma_format()) +
   labs(x = "Block Height", 
-       y = "Ergo Supply")
-
+       y = "Ergo Supply") +
+  theme_bw(base_size = 15)
 
 
