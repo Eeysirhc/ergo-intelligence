@@ -1,6 +1,7 @@
 /***************************
 Author: eeysirhc
 Date written: 2021-12-27
+Last updated: 2022-01-15
 Objective: calculate the running differential balance of every Ergo wallet address over time
 ***************************/
 
@@ -32,7 +33,7 @@ balance as (
 )
 
 select address,
-    to_char(to_timestamp(timestamp / 1000), 'YYYY-MM-DD') as date,
+    timestamp,
     diff / 10^9 as diff
 from balance
 
