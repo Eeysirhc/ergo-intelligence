@@ -33,7 +33,7 @@ balance as (
 )
 
 select address,
-    timestamp,
+    to_timestamp(timestamp / 1000) as timestamp,
     diff / 10^9 as diff
 from balance
 
