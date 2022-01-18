@@ -38,6 +38,8 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-
 # DS_Store mosquitos
 .DS_Store
+
+# Jupyter checkpoints
+.ipynb_checkpoints
