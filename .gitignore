@@ -43,3 +43,6 @@ vignettes/*.pdf
 
 # Jupyter checkpoints
 .ipynb_checkpoints
+
+
+__pycache__
