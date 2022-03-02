@@ -37,7 +37,7 @@ select address,
     diff / 10^9 as diff
 from balance
 
-where address like '9%'
+where address like '9%%'
 group by 1, 2, 3
 having length(address) = 51
 
