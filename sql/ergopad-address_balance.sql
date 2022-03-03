@@ -1,7 +1,7 @@
 /***************************
 Author: eeysirhc
 Date written: 2022-02-26
-Last updated: 2022-03-01
+Last updated: 2022-03-03
 Objective: retrieve all Ergo addresses holding the $ergopad token
 Resources: https://ergopad.io/ 
 ***************************/
@@ -42,3 +42,33 @@ and not exists (select box_id from node_inputs ni where no.box_id = ni.box_id)
 group by 1 
 order by 2 desc
 ;
+
+
+
+
+/***************************
+Staked amount per address
+WIP: need to QA and validate the data
+***************************/
+
+select 
+no.address, 
+sum(s.amount) as staked_amount
+from node_outputs no
+
+join (select token_id, 
+box_id, 
+name, 
+description, 
+split_part(split_part(description, ':', 1), '{', 2) as category, 
+cast(trim(split_part(split_part(description, ',', 1), ':', 2), ' ') as float) as amount
+from tokens where name = 'ergopad Stake Key') s 
+on s.box_id = no.box_id 
+
+and not exists (select box_id from node_inputs ni where no.box_id = ni.box_id)
+group by 1 
+order by 2 desc 
+;
+
+
+
