@@ -76,5 +76,5 @@ ggplot() +
        y = "Ergo Supply") +
   theme_bw(base_size = 15)
 
-
 # ERGO Seed Phrase #9: "Anotha ___ anotha dolla"
+# https://www.reddit.com/r/ergonauts/comments/t2n8yj/the_15_days_of_ergo_seed_phrases/
