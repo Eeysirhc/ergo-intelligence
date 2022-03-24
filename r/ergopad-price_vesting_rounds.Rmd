@@ -1,0 +1,74 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+Author: eeysirhc
+Date written: 2022-03-24
+Objective: visualize ErgoPad price movement as it correlates with vesting schedule from seed/strategic rounds
+
+## Dependencies
+* [ergodex-stats](https://github.com/bazuaal/ergodex-stats)
+* [ergodex-price-app](https://github.com/Eeysirhc/ergodex-price-app)
+
+## Load packages
+```{r}
+library(tidyverse)
+library(RPostgres)
+library(scales)
+library(lubridate)
+```
+
+## Connect to ErgoDEX
+```{r}
+conn <- dbConnect(RPostgres::Postgres(),dbname = 'ergodex', 
+                 host = 'localhost', 
+                 port = 5433,
+                 user = 'ergodex',
+                 password = 'ergodex')
+```
+
+
+## Retrive price data
+```{r}
+df_raw <- as_tibble(
+  dbGetQuery(
+    conn, 
+"
+select *
+from price_data
+where xy_ticker = 'ergopad/SigUSD'
+;
+"
+))
+
+dbDisconnect(conn)
+
+df <- df_raw
+```
+
+## Plot
+```{r}
+df %>% 
+  select(timestamp, yx_price) %>% 
+  ggplot(aes(timestamp, yx_price)) +
+  geom_line() +
+  geom_point() +
+  
+  # Vesting dates
+  geom_vline(xintercept = as.numeric(ymd_hms("2022-02-26 00:00:00")), color = 'red', lty = 2) +
+  geom_vline(xintercept = as.numeric(ymd_hms("2022-03-28 00:00:00")), color = 'red', lty = 2) +
+  
+  expand_limits(ymin = 0, ymax = 0.50) +
+  scale_y_continuous(labels = dollar_format()) +
+  labs(x = NULL,
+       y = "USD Price",
+       title = "ErgoPad: daily price movement",
+       subtitle = "Red line indicates vesting from seed/strategic rounds") +
+  theme_bw(base_size = 10)
+```
+
+
+
