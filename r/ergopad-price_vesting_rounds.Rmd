@@ -1,20 +1,22 @@
 ---
-title: "R Notebook"
-output: html_notebook
-editor_options: 
+title: "ErgoPad: daily price action to vesting schedule"
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: console
 ---
 
-Author: eeysirhc
-Date written: 2022-03-24
-Objective: visualize ErgoPad price movement as it correlates with vesting schedule from seed/strategic rounds
+**Author:** eeysirhc  
+**Date written:** 2022-03-24  
+**Objective:** visualize ErgoPad price movement as it correlates with vesting schedule from seed/strategic rounds  
 
 ## Dependencies
 * [ergodex-stats](https://github.com/bazuaal/ergodex-stats)
 * [ergodex-price-app](https://github.com/Eeysirhc/ergodex-price-app)
 
 ## Load packages
-```{r}
+```{r message=FALSE, error=FALSE, warning=FALSE}
 library(tidyverse)
 library(RPostgres)
 library(scales)
@@ -22,7 +24,7 @@ library(lubridate)
 ```
 
 ## Connect to ErgoDEX
-```{r}
+```{r message=FALSE, error=FALSE, warning=FALSE}
 conn <- dbConnect(RPostgres::Postgres(),
                   dbname = 'ergodex', 
                   host = 'localhost', 
@@ -33,7 +35,7 @@ conn <- dbConnect(RPostgres::Postgres(),
 
 
 ## Retrive price data
-```{r}
+```{r message=FALSE, error=FALSE, warning=FALSE}
 df_raw <- as_tibble(
   dbGetQuery(
     conn, 
@@ -51,7 +53,7 @@ df <- df_raw
 ```
 
 ## Plot
-```{r}
+```{r message=FALSE, error=FALSE, warning=FALSE}
 df %>% 
   select(timestamp, yx_price) %>% 
   ggplot(aes(timestamp, yx_price)) +
