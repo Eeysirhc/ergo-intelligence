@@ -31,4 +31,4 @@ Submit a pull request to get started!
 
 Any tips to the cryptojar is always welcomed and appreciated! :)
 
-$ERG address: [9fGGAv2h8PJe4tbTUy5LD6FHS64i367Ctkm9ZPFfcZUB9mrFz3x](https://explorer.ergoplatform.com/en/addresses/9fGGAv2h8PJe4tbTUy5LD6FHS64i367Ctkm9ZPFfcZUB9mrFz3x)
+$ERG address: [9fsNArvL5VqZ4hJ6K8HVCatnWzgAwMd9Av7LTZZR8tVmbcL4a2S](https://explorer.ergoplatform.com/en/addresses/9fsNArvL5VqZ4hJ6K8HVCatnWzgAwMd9Av7LTZZR8tVmbcL4a2S)
